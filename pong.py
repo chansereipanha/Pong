@@ -1,106 +1,136 @@
 import turtle as t
 
-class Pong:
-    def __init__(self, screen, score_a, score_b, right_paddle, left_paddle, ball, score_board):
-        self.screen = screen
-        self.score_a = score_a
-        self.score_b = score_b
-        self.right_paddle = right_paddle
-        self.left_paddle = left_paddle
-        self.ball = ball
-        self.score_board = score_board
 
-    def window(self):
-        width, height = 1000 ,900
-        screen = t.Screen()
-        screen.title("PingPong Game")
-        screen.bgcolor("Black")
-        screen.setup(width ,height)
-        screen.tracer(0)
-        self.score_a = 0
-        self.score_b =  0
-    
-        #Create left paddle
-    def paddle_a(self):
-        self.left_paddle = t.Turtle()
-        self.left_paddle.speed(0)
-        self.left_paddle.color("white")
-        self.left_paddle.shape("square")
-        self.left_paddle.shapesize(stretch_wid=5, stretch_len=0.5)
-        self.left_paddle.penup()
-        self.left_paddle.goto(480,0)
+screen = t.Screen()
+width, height = 1000 ,900
+screen.title("PingPong Game")
+screen.bgcolor("Black")
+screen.setup(width ,height)
+screen.tracer(0)
+score_a = 0
+score_b =  0
+max_score = 5
 
-    #Create a right paddle
-    def paddle_a(self):
-        self.right_paddle = t.Turtle()
-        self.right_paddle.speed(0)
-        self.right_paddle.color("white")
-        self.right_paddle.shape("square")
-        self.right_paddle.shapesize(stretch_wid=5, stretch_len=0.5)
-        self.right_paddle.penup()
-        self.right_paddle.goto(-480,0)
+#Create left paddle
 
-    def bouncing_ball(self):
-        self.ball = t.Turtle()
-        self.ball.speed(0)
-        self.ball.shape("circle")
-        self.ball.color("white")
-        self.ball.shapesize(stretch_len=0.5, stretch_wid=0.5)
-        self.ball.pu()
-        self.ball.goto(0,0)
-        self.ball.dx = 1
-        self.ball.dy = 1
+left_paddle = t.Turtle()
+left_paddle.color("white")
+left_paddle.shape("square")
+left_paddle.shapesize(stretch_wid=5, stretch_len=0.5)
+left_paddle.penup()
+left_paddle.goto(-480,0)
 
-    def scoreboard(self):
-        self.score_board = t.Turtle()
-        self.score_board.penup()
-        self.score_board.color("white")
-        self.score_board.goto(0, 400)
-        self.score_board.write("Player A: 0               Player B: 0", align="center", font=("Arial", 15, "normal"))
-        self.score_board.hideturtle()
+#Create a right paddle
+
+right_paddle = t.Turtle()
+right_paddle.color("white")
+right_paddle.shape("square")
+right_paddle.shapesize(stretch_wid=5, stretch_len=0.5)
+right_paddle.penup()
+right_paddle.goto(480,0)
+
+
+ball = t.Turtle()
+ball.speed(1)
+ball.shape("circle")
+ball.color("white")
+ball.shapesize(stretch_len=0.5, stretch_wid=0.5)
+ball.pu()
+ball.goto(0,0)
+ball.dx = 0.1       
+ball.dy = 0.1
 
 
 
+score_board = t.Turtle()
+score_board.penup()
+score_board.color("white")
+score_board.goto(0, 400)
+score_board.write(f"Player A: {score_a}              Player B: {score_b}", align="center", font=("Roboto", 15, "bold"))
+score_board.hideturtle()
 
-class Paddle(Pong):
-    def __init__(self, screen, right_paddle, left_paddle, y_up, y_down):
-        super().__init__(screen, right_paddle, left_paddle)
-        self.y_up = y_up
-        self.y_down = y_down
+def left_paddle_up():
+    y_up = left_paddle.ycor()
+    y_up += 30
+    left_paddle.sety(y_up)
 
-    def left_paddle_up(self):
-        self.y_up = self.left_paddle.ycor()
-        self.y_up += 30
-        self.left_paddle.sety(self.y_up)
+def left_paddle_down():
+    y_up = left_paddle.ycor()
+    y_up -= 30
+    left_paddle.sety(y_up)
 
-    def left_paddle_down(self):
-        self.y_up = self.left_paddle.ycor()
-        self.y_up -= 30
-        self.left_paddle.sety(self.y_up)
+def right_paddle_up():
+    y_up = right_paddle.ycor()
+    y_up += 30
+    right_paddle.sety(y_up)
 
-    def right_paddle_up(self):
-        self.y_up = self.right_paddle.ycor()
-        self.y_up += 30
-        self.right_paddle.sety(self.y_up)
+def right_paddle_down():
+    y_up = right_paddle.ycor()
+    y_up -= 30
+    right_paddle.sety(y_up)
 
-    def left_paddle_down(self):
-        self.y_up = self.right_paddle.ycor()
-        self.y_up -= 30
-        self.right_paddle.sety(self.y_up)
 
-class key(Paddle):
-    def __init__(self, screen, right_paddle, left_paddle,):
-        super().__init__(screen, right_paddle, left_paddle)
-
-    def keybinds(self):
-        self.screen.listen()
-        self.screen.onkeypress(Paddle.left_paddle_up, "w")
-        self.screen.onkeypress(Paddle.left_paddle_down, "s")
-        self.screen.onkeypress(Paddle.right_paddle_up, "Up")
-        self.screen.onkeypress(Paddle.right_paddle_up, "Down")
+screen.listen()
+screen.onkeypress(left_paddle_up, "w")
+screen.onkeypress(left_paddle_down, "s")
+screen.onkeypress(right_paddle_up, "Up")
+screen.onkeypress(right_paddle_down, "Down")
 
 
 
+while True:
+    screen.update()
+
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+
+    if ball.ycor() > 450:
+        ball.sety(450)
+        ball.dy *= -1
+
+    if ball.ycor() < -450:
+        ball.sety(-450)
+        ball.dy *= -1
+
+    if ball.xcor() > 500:
+        ball.goto(0, 0)
+        ball.dx *= -1
+        score_a += 1
+        score_board.clear()
+        score_board.write(f"Player A: {score_a}              Player B: {score_b}", align="center", font=("Roboto", 15, "bold"))
+
+
+
+    if ball.xcor() < -500:
+        ball.goto(0, 0)
+        ball.dx *= -1
+        score_b += 1
+        score_board.clear()
+        score_board.write(f"Player A: {score_a}              Player B: {score_b}", align="center", font=("Roboto", 15, "bold"))
+
+
+    if 470 < ball.xcor() < 480 and (right_paddle.ycor()-40)< ball.ycor() < (right_paddle.ycor()+40):
+        ball.dx*=-1
+    if -480 < ball.xcor() < -470 and (left_paddle.ycor()-40)< ball.ycor() < (left_paddle.ycor()+40):
+        ball.dx*=-1
+
+
+    if score_a == max_score:
+        screen.clear()
+        screen.bgcolor("black")
+        winner = t.Turtle()
+        winner.color("white")
+        winner.write("Player A is the winner", align= "center", font=("Arial", 30, "bold"))
+        winner.hideturtle()
+        break
+    elif score_b == max_score:
+        screen.clear()
+        screen.bgcolor("black")
+        winner = t.Turtle()
+        winner.color("white")
+        winner.write("Player B is the winner", align= "center", font=("Arial", 30, "bold"))
+        winner.hideturtle()
+        break
 
 
 t.done()
