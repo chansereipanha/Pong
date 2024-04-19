@@ -1,3 +1,4 @@
+#Import turtle library 
 import turtle as t
 
 #Create our screen interface
@@ -87,7 +88,7 @@ while True:
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
-    #These if statements will decide how the ball will interact onec they made impact with the edge of the screen 
+    #These if statements will decide how the ball will interact once they made impact with the top edge of the screen 
     if ball.ycor() > 450:
         ball.sety(450)
         ball.dy *= -1
@@ -96,15 +97,14 @@ while True:
         ball.sety(-450)
         ball.dy *= -1
 
-    #This if statement decide that if the ball were to touch the 
+    #This if statement decide that if the ball were to touch the sides of the screen it will go back to it's original position
+    #And the player will get one score added if it touches the opponent side of the screen
     if ball.xcor() > 500:
         ball.goto(0, 0)
         ball.dx *= -1
         score_a += 1
         score_board.clear()
         score_board.write(f"Player A: {score_a}              Player B: {score_b}", align="center", font=("Roboto", 15, "bold"))
-
-
 
     if ball.xcor() < -500:
         ball.goto(0, 0)
@@ -113,13 +113,13 @@ while True:
         score_board.clear()
         score_board.write(f"Player A: {score_a}              Player B: {score_b}", align="center", font=("Roboto", 15, "bold"))
 
-
+    #This if statement decide that if the ball were to touch the paddles it will bounce off the paddle and go in the opposite direction
     if 470 < ball.xcor() < 480 and (right_paddle.ycor()-40)< ball.ycor() < (right_paddle.ycor()+40):
         ball.dx*=-1
     if -480 < ball.xcor() < -470 and (left_paddle.ycor()-40)< ball.ycor() < (left_paddle.ycor()+40):
         ball.dx*=-1
 
-
+    #This if statement is the winning condition and will print out the winner when they get the max amount of point
     if score_a == max_score:
         screen.clear()
         screen.bgcolor("black")
